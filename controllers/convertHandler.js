@@ -36,24 +36,23 @@ function ConvertHandler() {
   };
 
   this.getUnit = function (input) {
-    let result = splitter(input)[1].toLowercase();
+    var result;
 
-    switch (result) {
-      case "km":
-        return "km";
-      case "gal":
-        return "gal";
-      case "lbs":
-        return "lbs";
-      case "mi":
-        return "mi";
-      case "l":
-        return "L";
-      case "kg":
-        return "kg";
-      default:
-        return undefined;
+    let inputRegex = /[a-z]+|[^a-z]+/gi
+
+    result = input.match(inputRegex)[1]
+
+    if (!result) {
+      result = input.match(inputRegex)[0]
     }
+
+    let validUnits = ['gal', 'l', 'mi', 'km', 'lbs', 'kg', 'GAL', 'L', 'MI', 'KM', 'LBS', 'KG']
+
+    if (!validUnits.includes(result)) {
+      return 'invalid unit'
+    }
+
+    return result;
   };
 
   this.getReturnUnit = function (initUnit) {
