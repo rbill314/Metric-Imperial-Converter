@@ -29,115 +29,99 @@ function ConvertHandler() {
     result = parseFloat(num1) / parseFloat(num2);
 
     if (isNaN(num1) || isNaN(num2)) {
-      return undefined;
+      return 'Invalid Get Num'
     }
 
     return result;
   };
 
   this.getUnit = function (input) {
-    var result;
-
-    let inputRegex = /[a-z]+|[^a-z]+/gi
-
-    result = input.match(inputRegex)[1]
-
-    if (!result) {
-      result = input.match(inputRegex)[0]
-    }
-
-    let validUnits = ['gal', 'l', 'mi', 'km', 'lbs', 'kg', 'GAL', 'L', 'MI', 'KM', 'LBS', 'KG']
-
-    if (!validUnits.includes(result)) {
-      return 'invalid unit'
-    }
-
-    return result;
+    const re = /[A-Za-z]+/;
+    let unit = re.exec(input);
+    if (!unit) return null;
+    unit = unit[0].toLowerCase();
+    if (unit === 'l') unit = 'L';
+    const possibleInputs = ['gal', 'L', 'mi', 'km', 'lbs', 'kg'];
+    if (possibleInputs.indexOf(unit) === -1) return null;
+    return unit;
   };
 
   this.getReturnUnit = function (initUnit) {
-    let unit = initUnit.toLowercase();
 
-    switch (unit) {
-      case "km":
-        return "mi";
+    switch (initUnit) {
       case "gal":
         return "L";
+      case "L":
+        return "gal";
       case "lbs":
         return "kg";
-      case "mi":
-        return "km";
-      case "l":
-        return "gal";
       case "kg":
         return "lbs";
+      case "mi":
+        return "km";
+      case "km":
+        return "mi";
       default:
-        return undefined;
+        return 'Invalid Return Unit';
     }
   };
 
   this.spellOutUnit = function (unit) {
-    var result;
 
     switch (unit) {
-      case 'gal':
-      case 'GAL':
-        result = 'gallon(s)';
-        break;
-      case 'l':
-      case 'L':
-        result = 'liter(s)';
-        break;
-      case 'lbs':
-      case 'LBs':
-        result = 'pound(s)';
-        break;
-      case 'kg':
-      case 'KG':
-        result = 'kilogram(s)';
-        break;
       case 'mi':
-      case 'MI':
-        result = 'mile(s)';
-        break;
+        return 'miles';
       case 'km':
-      case 'KM':
-        result = 'kilometer(s)';
-        break;
+        return 'kilometers';
+      case 'lbs':
+        return 'pounds';
+      case 'kg':
+        return 'kilograms';
+      case 'gal':
+        return 'gallons';
+      case 'l':
+        return 'liters';
+      default:
+        return 'Invalid Spell Out Unit';
     }
-
-    return result;
   };
+
 
   this.convert = function (initNum, initUnit) {
     const galToL = 3.78541;
     const lbsToKg = 0.453592;
     const miToKm = 1.60934;
-    let unit = initUnit.toLowercase();
-    let result;
 
-    switch (unit) {
+    const roundToFiveDecimals = n => Math.round(n * 100000) / 100000;
+
+    switch (initUnit) {
       case "gal":
-        result = initNum * galToL;
-      case "lbs":
-        result = initNum * lbsToKg;
-      case "mi":
-        result = initNum * miToKm;
+        return roundToFiveDecimals(initNum * galToL);
       case "L":
-        result = initNum / galToL;
+        return roundToFiveDecimals(initNum / galToL);
+      case "lbs":
+        return roundToFiveDecimals(initNum * lbsToKg);
       case "kg":
-        result = initNum / lbsToKg;
+        return roundToFiveDecimals(initNum / lbsToKg);
+      case "mi":
+        return roundToFiveDecimals(initNum * miToKm);
       case "km":
-        result = initNum / miToKm;
+        return roundToFiveDecimals(initNum / miToKm);
       default:
-        result = undefined;
-    };
-    return parseFloat(result.toFixed(5));
+        return 'Invalid Convert'
+    }
   };
 
   this.getString = function (initNum, initUnit, returnNum, returnUnit) {
-    return `${initNum} ${this.spellOutUnit(initUnit)} converts to ${returnNum} ${this.spellOutUnit(returnUnit)}`
-  }
+    return {
+      initNum: initNum,
+      initUnit: initUnit,
+      returnNum: returnNum,
+      returnUnit: returnUnit,
+      string: `${initNum} ${this.spellOutUnit(initUnit)} 
+     converts to ${returnNum} ${this.spellOutUnit(returnUnit)}`
+    };
+  };
 }
 
 module.exports = ConvertHandler;
