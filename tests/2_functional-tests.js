@@ -6,7 +6,9 @@ const server = require('../server');
 chai.use(chaiHttp);
 
 suite('Functional Tests', function () {
+
     suite('Routing Tests', function () {
+
         suite('GET /api/convert => conversion object', function () {
 
             test('Convert 10L (valid input)', function (done) {
@@ -21,24 +23,27 @@ suite('Functional Tests', function () {
                         assert.equal(res.body.initUnit, 'L');
                         assert.approximately(res.body.returnNum, 2.64172, 0.1);
                         assert.equal(res.body.returnUnit, 'gal');
-                        done()
+                        done();
                     });
             });
 
             test('Convert 32g (invalid input unit)', function (done) {
                 chai.request(server)
-                    .get("/api/convert")
+                    .get('/api/convert')
                     .query({
-                        input: "32g"
+                        input: '32g'
                     })
-                    .end((err, res) => {
+                    .end(function (err, res) {
                         assert.equal(res.status, 200);
+                        assert.equal(res.body.initNum, 32);
                         assert.equal(res.body.initUnit, undefined);
+                        assert.isNotNumber(res.body.returnNum);
+                        assert.equal(res.body.returnUnit, undefined);
                         done();
                     });
             });
 
-            test("3/7.2/4kg (invalid number)", function (done) {
+            test('Convert 3/7.2/4kg (invalid number)', function (done) {
                 chai.request(server)
                     .get('/api/convert')
                     .query({
@@ -46,12 +51,15 @@ suite('Functional Tests', function () {
                     })
                     .end(function (err, res) {
                         assert.equal(res.status, 200);
-                        assert.equal(res.body.initNum, undefined)
+                        assert.isNotNumber(res.body.initNum);
+                        assert.equal(res.body.initUnit, 'kg');
+                        assert.isNotNumber(res.body.returnNum);
+                        assert.equal(res.body.returnUnit, 'lbs');
                         done();
                     });
-            })
+            });
 
-            test("3/7.2/4kilomegagram (invalid number and unit)", function (done) {
+            test('Convert 3/7.2/4kilomegagram (invalid number and unit)', function (done) {
                 chai.request(server)
                     .get('/api/convert')
                     .query({
@@ -59,13 +67,15 @@ suite('Functional Tests', function () {
                     })
                     .end(function (err, res) {
                         assert.equal(res.status, 200);
+                        assert.isNotNumber(res.body.initNum);
                         assert.equal(res.body.initUnit, undefined);
-                        assert.equal(res.body.initNum, undefined)
+                        assert.isNotNumber(res.body.returnNum);
+                        assert.equal(res.body.returnUnit, undefined);
                         done();
                     });
-            })
+            });
 
-            test("Convert kg (no number)", function (done) {
+            test('Convert kg (no number)', function (done) {
                 chai.request(server)
                     .get('/api/convert')
                     .query({
@@ -73,13 +83,16 @@ suite('Functional Tests', function () {
                     })
                     .end(function (err, res) {
                         assert.equal(res.status, 200);
-                        assert.equal(res.body.initUnit, 1);
-                        assert.equal(res.body.initNum, 'kg')
+                        assert.equal(res.body.initNum, 1);
+                        assert.equal(res.body.initUnit, 'kg');
                         assert.approximately(res.body.returnNum, 2.20462, 0.1);
                         assert.equal(res.body.returnUnit, 'lbs');
                         done();
                     });
-            })
-        })
-    })
-})
+            });
+
+        });
+
+    });
+
+});
