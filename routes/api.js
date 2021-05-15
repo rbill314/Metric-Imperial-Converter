@@ -19,19 +19,25 @@ module.exports = function (app) {
       returnUnit
     );
 
-    if (initNum == "invalid number" && initUnit == "invalid unit") {
-      res.json("invalid number and unit");
-    } else if (initUnit == "invalid unit") {
-      res.json("invalid unit");
-    } else if (initNum == "invalid number") {
-      res.json("invalid number");
-    } else
-      res.json({
-        initNum: initNum,
-        initUnit: initUnit,
-        returnNum: returnNum,
-        returnUnit: returnUnit,
-        string: toString
-      });
+    const answer = () => {
+      if (!initNum || initNum === 'invalid number' && returnUnit === 'invalid unit') {
+        return 'invalid number and unit'
+      } else if (!initNum || initNum === 'invalid number') {
+        return 'invalid number'
+      } else if (returnUnit === 'invalid unit') {
+        return 'invalid unit'
+      } else {
+        return {
+          initNum,
+          initUnit,
+          returnNum,
+          returnNum,
+          returnUnit,
+          string: toString
+        }
+      }
+    }
+
+    res.json(answer())
   });
 };

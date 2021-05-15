@@ -30,31 +30,24 @@ suite("Functional Tests", function () {
                     .request(server)
                     .get("/api/convert")
                     .query({
-                        input: "32g"
+                        input: '32glhl'
                     })
-                    .end(function (err, res) {
+                    .end((err, res) => {
                         assert.equal(res.status, 200);
-                        assert.equal(res.body.initNum, 32);
-                        assert.equal(res.body.initUnit, undefined);
-                        assert.isNotNumber(res.body.returnNum);
-                        assert.equal(res.body.returnUnit, "invalid unit");
-                        done();
-                    });
+                        assert.isNotOk(res.body.returnUnit, 'invalid unit');
+                        done()
+                    })
             });
 
-            test("Convert 3/7.2/4kg (invalid number)", function (done) {
-                chai
-                    .request(server)
-                    .get("/api/convert")
+            test('Convert 3/7.2/4kg (invalid number)', function (done) {
+                chai.request(server)
+                    .get('/api/convert')
                     .query({
-                        input: "3/7.2/4kg"
+                        input: 'xyz'
                     })
                     .end(function (err, res) {
                         assert.equal(res.status, 200);
-                        assert.isNotNumber(res.body.initNum, "invalid number");
-                        assert.equal(res.body.initUnit, "kg");
-                        assert.isNotNumber(res.body.returnNum, "invalid number");
-                        assert.equal(res.body.returnUnit, "lbs");
+                        assert.isNotOk(res.body.initNum, "invalid number");
                         done();
                     });
             });
@@ -70,7 +63,10 @@ suite("Functional Tests", function () {
                         assert.equal(res.status, 200);
                         assert.isNotNumber(res.body.initNum, null);
                         assert.equal(res.body.initUnit, null);
-                        assert.isNotNumber({returnUnit, returnNum}=res.body, "invalid number and unit");
+                        assert.isNotNumber({
+                            returnUnit,
+                            returnNum
+                        } = res.body, "invalid number and unit");
                         done();
                     });
             });
