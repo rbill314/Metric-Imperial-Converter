@@ -44,25 +44,20 @@ suite('Unit Tests', function () {
     })
 
     suite("Function convertHandler.getUnit(input)", function () {
-        test("For Each Valid Unit Inputs", function (done) {
-            let input = ['gal', 'l', 'mi', 'km', 'lbs', 'kg', 'GAL', 'L', 'MI', 'KM', 'LBS', 'KG'];
-            input.forEach((ele) => {
-                assert.equal(convertHandler.getUnit(ele), ele);
-                done();
+        test('For Each Valid Unit Inputs', (done) => {
+            let input = ['gal','l','mi','km','lbs','kg','GAL','L','MI','KM','LBS','KG'];
+            input.forEach(function(ele) {
+              assert.equal(convertHandler.getUnit(ele), ele.toLowerCase());
+            done();
             })
+          });
 
-
-            test('Unknown Unit Input', (done) => {
-                const input = ['asdf', 'ASDF', 'iiifj', '', '123', null];
-                input.forEach(function (input) {
-                    input.forEach(function (ele, i) {
-                        assert.equal(convertHandler.getReturnUnit(ele), expect[i]);
-                        done();
-                    });
-                })
-            })
-        })
-    })
+          test("Unknown Unit Input", function(done) {
+            const input = "ihnt";
+            assert.isNotOk(convertHandler.getUnit(input));
+            done();
+          });
+    });
 
     suite("Function convertHandler.getReturnUnit(initUnit)", function () {
         test("For Each Valid Unit Inputs", function (done) {

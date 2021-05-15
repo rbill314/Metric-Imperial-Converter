@@ -26,8 +26,7 @@ suite('Functional Tests', function () {
             });
 
             test('Convert 32g (invalid input unit)', function (done) {
-                chai
-                    .request(server)
+                chai.request(server)
                     .get("/api/convert")
                     .query({
                         input: "32g"
