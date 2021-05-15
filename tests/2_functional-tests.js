@@ -2,6 +2,9 @@ const chaiHttp = require("chai-http");
 const chai = require("chai");
 let assert = chai.assert;
 const server = require("../server");
+const {
+    text
+} = require("body-parser");
 
 chai.use(chaiHttp);
 
@@ -25,48 +28,53 @@ suite("Functional Tests", function () {
                     });
             });
 
-            test("Convert 32g (invalid input unit)", function (done) {
-                chai
-                    .request(server)
-                    .get("/api/convert")
+            test('Convert 32g (invalid input unit)', function (done) {
+                chai.request(server)
+                    .get('/api/convert')
                     .query({
-                        input: '32glhl'
+                        input: '32g'
                     })
-                    .end((err, res) => {
+                    .end(function (err, res) {
                         assert.equal(res.status, 200);
-                        assert.isNotOk(res.body.returnUnit, 'invalid unit');
-                        done()
-                    })
+                        assert.strictEqual(res.body.initNum);
+                        assert.isUndefined(res.body.initUnit);
+                        assert.strictEqual(res.body.returnNum);
+                        assert.isUndefined(res.body.returnUnit);
+                        assert.isString(res.text, 'invalid unit')
+                        done();
+                    });
             });
 
             test('Convert 3/7.2/4kg (invalid number)', function (done) {
                 chai.request(server)
                     .get('/api/convert')
                     .query({
-                        input: 'xyz'
+                        input: '3/7.2/4kg'
                     })
                     .end(function (err, res) {
                         assert.equal(res.status, 200);
-                        assert.isNotOk(res.body.initNum, "invalid number");
+                        assert.isNotNumber(res.body.initNum);
+                        assert.strictEqual(res.body.initUnit);
+                        assert.isNotNumber(res.body.returnNum);
+                        assert.strictEqual(res.body.returnUnit);
+                        assert.isString(res.text, 'invalid number')
                         done();
                     });
             });
 
-            test("Convert 3/7.2/4kilomegagram (invalid number and unit)", function (done) {
-                chai
-                    .request(server)
-                    .get("/api/convert")
+            test('Convert 3/7.2/4kilomegagram (invalid number and unit)', function (done) {
+                chai.request(server)
+                    .get('/api/convert')
                     .query({
-                        input: "3/7.2/4kilomegagram"
+                        input: '3/7.2/4kilomegagram'
                     })
                     .end(function (err, res) {
                         assert.equal(res.status, 200);
-                        assert.isNotNumber(res.body.initNum, null);
-                        assert.equal(res.body.initUnit, null);
-                        assert.isNotNumber({
-                            returnUnit,
-                            returnNum
-                        } = res.body, "invalid number and unit");
+                        assert.isNotNumber(res.body.initNum);
+                        assert.isUndefined(res.body.initUnit);
+                        assert.isNotNumber(res.body.returnNum);
+                        assert.isUndefined(res.body.returnUnit);
+                        assert.isString(res.text, 'invalid number and unit')
                         done();
                     });
             });
