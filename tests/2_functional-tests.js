@@ -45,24 +45,30 @@ suite("Functional Tests", function () {
                 chai.request(server)
                     .get('/api/convert')
                     .query({
-                        input: '3/7.2/4kg'
+                        input: 'xyz'
                     })
                     .end(function (err, res) {
                         assert.equal(res.status, 200);
-                        assert.isString(res.text, 'invalid number')
+                        assert.isNotOk(res.body.initNum, "invalid number");
                         done();
                     });
             });
 
-            test('Convert 3/7.2/4kilomegagram (invalid number and unit)', function (done) {
-                chai.request(server)
-                    .get('/api/convert')
+            test("Convert 3/7.2/4kilomegagram (invalid number and unit)", function (done) {
+                chai
+                    .request(server)
+                    .get("/api/convert")
                     .query({
-                        input: '3/7.2/4kilomegagram'
+                        input: "3/7.2/4kilomegagram"
                     })
                     .end(function (err, res) {
                         assert.equal(res.status, 200);
-                        assert.isString(res.text, 'invalid number and unit')
+                        assert.isNotNumber(res.body.initNum, null);
+                        assert.equal(res.body.initUnit, null);
+                        assert.isNotNumber({
+                            returnUnit,
+                            returnNum
+                        } = res.body, "invalid number and unit");
                         done();
                     });
             });
