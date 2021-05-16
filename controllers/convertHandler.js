@@ -1,48 +1,58 @@
-function splitter(input) {
-  let number = input.match(/[.\d/]+/g) || ["1"];
-  let string = input.match(/[a-zA-Z]+/g)[0];
-
-  return [number[0], string];
-}
-
-function div(posFrac) {
-  let nums = posFrac.split("/");
-  if (nums.length > 2) {
-    return false;
-  }
-  return nums;
-}
-
 function ConvertHandler() {
   this.getNum = function(input) {
-    let result = splitter(input)[0];
-    let nums = div(result);
-
-    if (!nums) {
-      return 'invalid number';
+    var numRegex = /[\W\d]+/g;
+    var num = input.match(numRegex);
+    var result;
+    if (!num) {
+      var unit = this.getUnit(input);
+      if (unit === "invalid unit") {
+        return;
+      }
+      if (unit === "invalid unit") {
+        return "invalid unit";
+      } else {
+        result = "1";
+      }
     }
 
-    let num1 = nums[0];
-    let num2 = nums[1] || "1";
-
-    result = parseFloat(num1) / parseFloat(num2);
-
-    if (isNaN(num1) || isNaN(num2)) {
-      return 'invalid number';
+    if (num) {
+      result = num[0];
+      if (result == "0" || result.includes("-") || result === "Infinity") {
+        return "invalid number";
+      }
+      if (result.includes("/")) {
+        let values = result.split("/");
+        if (values.length != 2) {
+          return "invalid number";
+        }
+        values[0] = parseFloat(values[0]);
+        values[1] = parseFloat(values[1]);
+        result = parseFloat(values[0] / values[1]);
+      }
+      if (isNaN(result)) {
+        return "invalid number";
+      }
     }
-
-    return result || 'invalid number'
+    return result * 1;
   };
 
   this.getUnit = function(input) {
-    const re = /[A-Za-z]+/;
-    let unit = re.exec(input);
-    if (!unit) return null;
-    unit = unit[0].toLowerCase();
-    if (unit === "l") unit = "L";
-    const possibleInputs = ["gal", "L", "mi", "km", "lbs", "kg"];
-    if (possibleInputs.indexOf(unit) === -1) return null;
-    return unit;
+    var unitRegex = /[a-z]+$/i;
+    var unit = input.match(unitRegex);
+    if (!unit) {
+      return "invalid unit";
+    }
+    if (unit) {
+      var result = unit[0].toLowerCase();
+      let validUnits = ["gal", "l", "mi", "km", "lbs", "kg"];
+      if (!validUnits.includes(result)) {
+        return "invalid unit";
+      }
+      if (result === "l") {
+        result = "L";
+      }
+      return result;
+    }
   };
 
   this.getReturnUnit = function(initUnit) {

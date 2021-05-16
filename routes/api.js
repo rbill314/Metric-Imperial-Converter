@@ -3,10 +3,10 @@
 let expect = require("chai").expect;
 let ConvertHandler = require("../controllers/convertHandler.js");
 
-module.exports = function (app) {
+module.exports = function(app) {
   let convertHandler = new ConvertHandler();
 
-  app.route("/api/convert").get(function (req, res) {
+  app.route("/api/convert").get(function(req, res) {
     var input = req.query.input;
     var initNum = convertHandler.getNum(input);
     var initUnit = convertHandler.getUnit(input);
@@ -20,12 +20,15 @@ module.exports = function (app) {
     );
 
     const answer = () => {
-      if (!initNum || initNum === 'invalid number' && returnUnit === 'invalid unit') {
-        return 'invalid number and unit'
-      } else if (!initNum || initNum === 'invalid number') {
-        return 'invalid number'
-      } else if (returnUnit === 'invalid unit') {
-        return 'invalid unit'
+      if (
+        !initNum ||
+        (initNum === "invalid number" && returnUnit === "invalid unit")
+      ) {
+        return "invalid number and unit";
+      } else if (!initNum || initNum === "invalid number") {
+        return "invalid number";
+      } else if (returnUnit === "invalid unit") {
+        return "invalid unit";
       } else {
         return {
           initNum,
@@ -34,10 +37,10 @@ module.exports = function (app) {
           returnNum,
           returnUnit,
           string: toString
-        }
+        };
       }
-    }
+    };
 
-    res.json(answer())
+    res.json(answer());
   });
 };
