@@ -49,7 +49,7 @@ suite("Functional Tests", function () {
                     })
                     .end(function (err, res) {
                         assert.equal(res.status, 200);
-                        assert.isNotOk(res.body.initNum, "invalid number");
+                        assert.isString(res.text, "invalid number");
                         done();
                     });
             });
@@ -65,10 +65,9 @@ suite("Functional Tests", function () {
                         assert.equal(res.status, 200);
                         assert.isNotNumber(res.body.initNum, null);
                         assert.equal(res.body.initUnit, null);
-                        assert.isNotNumber({
-                            returnUnit,
-                            returnNum
-                        } = res.body, "invalid number and unit");
+                        assert.isNotNumber(res.body.returnUnit);
+                        assert.isNotNumber(res.body.returnNum);
+                        assert.isString(res.text, "invalid number and unit");
                         done();
                     });
             });
