@@ -45,7 +45,7 @@ suite("Functional Tests", function () {
                 chai.request(server)
                     .get('/api/convert')
                     .query({
-                        input: 'xyz'
+                        input: '3/7.2/4kg'
                     })
                     .end(function (err, res) {
                         assert.equal(res.status, 200);
