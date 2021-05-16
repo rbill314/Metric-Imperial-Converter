@@ -19,7 +19,7 @@ function ConvertHandler() {
     let nums = div(result);
 
     if (!nums) {
-      return undefined;
+      return 'invalid number';
     }
 
     let num1 = nums[0];
@@ -28,10 +28,10 @@ function ConvertHandler() {
     result = parseFloat(num1) / parseFloat(num2);
 
     if (isNaN(num1) || isNaN(num2)) {
-      return "invalid number";
+      return 'invalid number';
     }
 
-    return result;
+    return result || 'invalid number'
   };
 
   this.getUnit = function(input) {

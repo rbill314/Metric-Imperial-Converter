@@ -36,10 +36,6 @@ suite("Functional Tests", function () {
                     })
                     .end(function (err, res) {
                         assert.equal(res.status, 200);
-                        assert.strictEqual(res.body.initNum);
-                        assert.isUndefined(res.body.initUnit);
-                        assert.strictEqual(res.body.returnNum);
-                        assert.isUndefined(res.body.returnUnit);
                         assert.isString(res.text, 'invalid unit')
                         done();
                     });
@@ -53,10 +49,6 @@ suite("Functional Tests", function () {
                     })
                     .end(function (err, res) {
                         assert.equal(res.status, 200);
-                        assert.isNotNumber(res.body.initNum);
-                        assert.strictEqual(res.body.initUnit);
-                        assert.isNotNumber(res.body.returnNum);
-                        assert.strictEqual(res.body.returnUnit);
                         assert.isString(res.text, 'invalid number')
                         done();
                     });
@@ -70,10 +62,6 @@ suite("Functional Tests", function () {
                     })
                     .end(function (err, res) {
                         assert.equal(res.status, 200);
-                        assert.isNotNumber(res.body.initNum);
-                        assert.isUndefined(res.body.initUnit);
-                        assert.isNotNumber(res.body.returnNum);
-                        assert.isUndefined(res.body.returnUnit);
                         assert.isString(res.text, 'invalid number and unit')
                         done();
                     });
