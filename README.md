@@ -2,6 +2,7 @@ Metric Imperial Converter
 Free Code Camp Metric-Imperial Converter 5/13/2021
 
 Coded with VSCode and submitted thru Replit
+Only nodemon was used extra from what was given
 
 Complete the necessary conversion logic in /controllers/convertHandler.js
 Complete the necessary routes in /routes/api.js
