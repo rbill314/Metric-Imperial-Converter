@@ -6,7 +6,7 @@ let ConvertHandler = require("../controllers/convertHandler.js");
 module.exports = function(app) {
   let convertHandler = new ConvertHandler();
 
-  app.route("/api/convert").get(function(req, res) {
+  app.route("/api/convert").get((req, res) => {
     var input = req.query.input;
     var initNum = convertHandler.getNum(input);
     var initUnit = convertHandler.getUnit(input);
